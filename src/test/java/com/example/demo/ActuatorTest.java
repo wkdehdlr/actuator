@@ -16,7 +16,6 @@ public class ActuatorTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-
     private static final String ACTUATOR_HEALTHCHECK_ENDPOINT = "http://localhost:8081/healthcheck";
 
     @Test
