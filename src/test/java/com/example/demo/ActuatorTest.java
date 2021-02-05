@@ -16,10 +16,13 @@ public class ActuatorTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
+
+    private static final String ACTUATOR_HEALTHCHECK_ENDPOINT = "http://localhost:8081/healthcheck";
+
     @Test
     void 액츄에이터로_헬스체크() {
         ResponseEntity<String> forEntity = testRestTemplate
-            .getForEntity("http://localhost:8081/healthcheck", String.class);
+            .getForEntity(ACTUATOR_HEALTHCHECK_ENDPOINT, String.class);
 
         assertEquals(forEntity.getStatusCode(), HttpStatus.OK);
     }
