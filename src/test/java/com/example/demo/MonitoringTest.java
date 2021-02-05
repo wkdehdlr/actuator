@@ -14,8 +14,9 @@ import org.springframework.boot.actuate.health.Status;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
-@WebMvcTest
+@WebMvcTest(Monitoring.class)
 class MonitoringTest {
 
     @Autowired
@@ -26,31 +27,43 @@ class MonitoringTest {
 
     @Test
     void health() throws Exception {
+        //given
         given(myHealthIndicator.health()).willReturn(Health.status(Status.UP).build());
 
-        mockMvc.perform(get("/monitor/l7check"))
-            .andExpect(status().isOk())
+        //when
+        final ResultActions actions = mockMvc.perform(get("/monitor/l7check"))
             .andDo(print());
+
+        //then
+        actions.andExpect(status().isOk());
     }
 
     @Test
     void up() throws Exception {
+        //given
         given(myHealthIndicator.up()).willReturn(Health.up().build());
 
-        mockMvc.perform(get("/monitor/l7check/start"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.status", Matchers.is(Status.UP.toString())))
+        //when
+        final ResultActions actions = mockMvc.perform(get("/monitor/l7check/start"))
             .andDo(print());
+
+        //then
+        actions.andExpect(status().isOk())
+            .andExpect(jsonPath("$.status", Matchers.is(Status.UP.toString())));
     }
 
 
     @Test
     void down() throws Exception {
+        //given
         given(myHealthIndicator.down()).willReturn(Health.down().build());
 
-        mockMvc.perform(get("/monitor/l7check/stop"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.status",Matchers.is(Status.DOWN.toString())))
+        //when
+        final ResultActions actions = mockMvc.perform(get("/monitor/l7check/stop"))
             .andDo(print());
+
+        //then
+        actions.andExpect(status().isOk())
+            .andExpect(jsonPath("$.status", Matchers.is(Status.DOWN.toString())));
     }
 }
